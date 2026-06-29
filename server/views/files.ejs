@@ -1,0 +1,63 @@
+<%- include('partials/head', { pageTitle: 'File Manager — WanitoModz Hosting' }) %>
+<body>
+  <div class="app-shell">
+    <%- include('partials/nav', { user: user, active: 'files' }) %>
+
+    <main class="main-content">
+      <div class="page-pad">
+        <div class="page-head">
+          <div>
+            <h1>File manager</h1>
+            <p class="page-sub" id="usageLine">Loading storage usage…</p>
+          </div>
+        </div>
+
+        <div class="breadcrumbs" id="breadcrumbs"></div>
+
+        <div class="toolbar">
+          <button class="btn btn-secondary btn-sm" id="newFolderBtn">+ New folder</button>
+          <button class="btn btn-secondary btn-sm" id="newFileBtn">+ New file</button>
+          <button class="btn btn-primary btn-sm" id="uploadBtn">⤒ Upload</button>
+          <input type="file" id="uploadInput" class="visually-hidden" multiple>
+        </div>
+
+        <div class="section-card">
+          <div id="fileListMount">
+            <div class="empty-state"><p>Loading…</p></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="newFolderModal">
+    <div class="modal">
+      <h3>New folder</h3>
+      <div class="field"><label for="newFolderName">Folder name</label><input type="text" id="newFolderName" placeholder="my-folder"></div>
+      <div class="modal-actions"><button class="btn btn-ghost" data-close-modal="newFolderModal">Cancel</button><button class="btn btn-primary" id="confirmNewFolder">Create</button></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="newFileModal">
+    <div class="modal">
+      <h3>New file</h3>
+      <div class="field"><label for="newFileName">File name</label><input type="text" id="newFileName" placeholder="notes.txt"></div>
+      <div class="field"><label for="newFileContent">Content (optional)</label><textarea id="newFileContent" placeholder="..."></textarea></div>
+      <div class="modal-actions"><button class="btn btn-ghost" data-close-modal="newFileModal">Cancel</button><button class="btn btn-primary" id="confirmNewFile">Create</button></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="deleteModal">
+    <div class="modal">
+      <h3>Delete this item?</h3>
+      <p style="color:var(--text-muted);font-size:13.5px;" id="deleteModalText">This can't be undone.</p>
+      <div class="modal-actions"><button class="btn btn-ghost" data-close-modal="deleteModal">Cancel</button><button class="btn btn-danger" id="confirmDeleteFile">Delete</button></div>
+    </div>
+  </div>
+
+  <div id="toastStack"></div>
+  <script src="/js/toast.js"></script>
+  <script src="/js/app-shell.js"></script>
+  <script src="/js/files.js"></script>
+</body>
+</html>

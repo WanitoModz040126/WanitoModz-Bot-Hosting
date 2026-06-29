@@ -1,0 +1,11 @@
+<%- include('partials/head', { pageTitle: 'Not found — WanitoModz Hosting' }) %>
+<body>
+  <div class="not-found-wrap">
+    <div>
+      <h1>404</h1>
+      <p style="color:var(--text-muted);margin:10px 0 20px;">That page doesn't exist.</p>
+      <a href="<%= user ? '/dashboard' : '/login' %>" class="btn btn-primary">Go back</a>
+    </div>
+  </div>
+</body>
+</html>

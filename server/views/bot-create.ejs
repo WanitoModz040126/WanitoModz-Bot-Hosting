@@ -1,0 +1,110 @@
+<%- include('partials/head', { pageTitle: 'Deploy a bot — WanitoModz Hosting' }) %>
+<body>
+  <div class="app-shell">
+    <%- include('partials/nav', { user: user, active: 'create' }) %>
+
+    <main class="main-content">
+      <div class="page-pad">
+        <div class="page-head">
+          <div>
+            <h1>Deploy a new bot</h1>
+            <p class="page-sub">Pick a library, name your bot, and upload your script.</p>
+          </div>
+        </div>
+
+        <div class="wizard-steps">
+          <div class="wizard-step is-active"><span class="num">1</span> Choose library</div>
+          <div class="wizard-step is-active"><span class="num">2</span> Bot details</div>
+          <div class="wizard-step is-active"><span class="num">3</span> Upload script</div>
+        </div>
+
+        <div id="alertMount"></div>
+
+        <form id="createBotForm" novalidate>
+          <div class="section-card" style="margin-bottom:18px;">
+            <div class="section-head"><h2>Step 1 · Choose your library</h2></div>
+            <div class="lib-grid" id="libGrid">
+              <button type="button" class="lib-card is-selected" data-lib="pytelegrambotapi-sync">
+                <div class="lib-top"><span class="lib-name">pyTelegramBotAPI</span><span class="lib-tag">Sync</span></div>
+                <div class="lib-desc">Simple and beginner-friendly</div>
+              </button>
+              <button type="button" class="lib-card" data-lib="pytelegrambotapi-async">
+                <div class="lib-top"><span class="lib-name">pyTelegramBotAPI</span><span class="lib-tag">Async</span></div>
+                <div class="lib-desc">Async version, better performance</div>
+              </button>
+              <button type="button" class="lib-card" data-lib="python-telegram-bot">
+                <div class="lib-top"><span class="lib-name">python-telegram-bot</span><span class="lib-tag">Async</span></div>
+                <div class="lib-desc">Full-featured, production-ready</div>
+              </button>
+              <button type="button" class="lib-card" data-lib="aiogram">
+                <div class="lib-top"><span class="lib-name">aiogram 3.x</span><span class="lib-tag">Async</span></div>
+                <div class="lib-desc">Modern, fast, scalable</div>
+              </button>
+              <button type="button" class="lib-card" data-lib="pyrogram">
+                <div class="lib-top"><span class="lib-name">Pyrogram</span><span class="lib-tag">Async</span></div>
+                <div class="lib-desc">MTProto-based, powerful</div>
+              </button>
+              <button type="button" class="lib-card" data-lib="custom">
+                <div class="lib-top"><span class="lib-name">Custom / Other</span></div>
+                <div class="lib-desc">Upload your own bot file as-is</div>
+              </button>
+            </div>
+
+            <div class="code-preview">
+              <div class="code-preview-head"><span id="previewFileName">starter_template.py</span><button type="button" class="link-btn" id="copyPreviewBtn">Copy</button></div>
+              <pre id="previewCode"></pre>
+            </div>
+          </div>
+
+          <div class="section-card" style="margin-bottom:18px;">
+            <div class="section-head"><h2>Step 2 · Bot details</h2></div>
+            <div class="field">
+              <label for="botName">Bot name</label>
+              <input type="text" id="botName" name="name" placeholder="My Awesome Bot" required>
+              <span class="field-hint">A friendly name to help you identify this bot.</span>
+            </div>
+            <div class="field">
+              <label for="botToken">Bot token <span style="text-transform:none;font-weight:400;">(optional — only if your script reads <code>BOT_TOKEN</code> from the environment)</span></label>
+              <input type="text" id="botToken" name="token" placeholder="123456789:ABCdefGHIjklMNOpqrsTUVwxyz">
+              <span class="field-hint">Stored encrypted. Get a token from <a href="https://t.me/BotFather" target="_blank" rel="noopener" class="help-link">@BotFather</a> on Telegram.</span>
+            </div>
+          </div>
+
+          <div class="section-card" style="margin-bottom:18px;">
+            <div class="section-head"><h2>Step 3 · Upload your script</h2></div>
+            <div class="dropzone" id="dropzone">
+              <input type="file" id="fileInput" name="file" accept=".py" class="visually-hidden">
+              <div class="dz-icon"><svg width="46" height="46" viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0l-4 4m4-4l4 4M5 16v3a2 2 0 002 2h10a2 2 0 002-2v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <h4 id="dzTitle">Drop your Python file here</h4>
+              <p id="dzSub">or tap to browse — .py files only, up to 8 MB</p>
+            </div>
+
+            <div class="notice-box">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 8v.01M12 11v5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <div>
+                Good to know:
+                <ul>
+                  <li>Your token is available to your script as <code>os.environ.get('BOT_TOKEN')</code></li>
+                  <li>Each bot runs in its own isolated, private folder</li>
+                  <li>You can manage extra files later from the File Manager</li>
+                  <li>Logs stream live the moment your bot starts</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" id="createBotSubmit">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Deploy bot
+          </button>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <div id="toastStack"></div>
+  <script src="/js/toast.js"></script>
+  <script src="/js/app-shell.js"></script>
+  <script src="/js/bot-create.js"></script>
+</body>
+</html>

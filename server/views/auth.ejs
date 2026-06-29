@@ -1,0 +1,98 @@
+<%- include('partials/head', { pageTitle: 'WanitoModz Hosting — Sign in' }) %>
+<body>
+  <div class="auth-shell">
+    <section class="auth-brand-panel">
+      <div class="auth-brand-top">
+        <span class="brand-mark">W</span>
+        <span class="brand-name">WanitoModz<span class="brand-sub">Hosting</span></span>
+      </div>
+
+      <div class="auth-pitch">
+        <h1>Deploy your <span>Telegram bot</span> in under a minute.</h1>
+        <p>Upload your Python script, pick a library, and WanitoModz keeps it running 24/7 — with isolated storage per account and live logs you can watch in real time.</p>
+
+        <div class="deploy-console">
+          <div class="deploy-console-head">
+            <span></span><span></span><span></span>
+            <em>deploy.sh</em>
+          </div>
+          <div class="deploy-console-body">
+            <div class="ln"><span class="muted">$</span> upload main.py</div>
+            <div class="ln"><span class="pink">→</span> installing dependencies...</div>
+            <div class="ln"><span class="ok">✓</span> bot process started</div>
+            <div class="ln"><span class="muted">$</span> tail -f run.log <span class="ok">— online</span></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="auth-foot">Free plan includes 3 bots and 2.5 GB of storage.</p>
+    </section>
+
+    <section class="auth-form-panel">
+      <div class="auth-form-card">
+        <div class="auth-tabs">
+          <button class="auth-tab is-active" id="tabSignIn" type="button">Sign in</button>
+          <button class="auth-tab" id="tabSignUp" type="button">Create account</button>
+        </div>
+
+        <div id="alertMount"></div>
+
+        <!-- Sign in -->
+        <div class="auth-form-section is-active" id="sectionSignIn">
+          <div class="auth-heading">
+            <h2>Welcome back</h2>
+            <p>Sign in to manage your hosted bots.</p>
+          </div>
+          <form id="signInForm" novalidate>
+            <div class="field">
+              <label for="siUsername">Username</label>
+              <input type="text" id="siUsername" name="username" autocomplete="username" placeholder="e.g. wanito" required>
+            </div>
+            <div class="field">
+              <label for="siPassword">Password</label>
+              <input type="password" id="siPassword" name="password" autocomplete="current-password" placeholder="••••••••" required>
+            </div>
+            <% if (turnstileSiteKey) { %>
+              <div class="cf-turnstile-mount cf-turnstile" data-sitekey="<%= turnstileSiteKey %>" data-theme="dark"></div>
+            <% } %>
+            <button type="submit" class="btn btn-primary btn-block" id="signInSubmit">Sign in</button>
+          </form>
+        </div>
+
+        <!-- Sign up -->
+        <div class="auth-form-section" id="sectionSignUp">
+          <div class="auth-heading">
+            <h2>Create your account</h2>
+            <p>Start hosting your bot for free.</p>
+          </div>
+          <form id="signUpForm" novalidate>
+            <div class="field">
+              <label for="suUsername">Username</label>
+              <input type="text" id="suUsername" name="username" autocomplete="username" placeholder="3-20 characters" required>
+            </div>
+            <div class="field">
+              <label for="suPassword">Password</label>
+              <input type="password" id="suPassword" name="password" autocomplete="new-password" placeholder="At least 6 characters" required>
+            </div>
+            <div class="field">
+              <label for="suConfirm">Confirm password</label>
+              <input type="password" id="suConfirm" name="confirmPassword" autocomplete="new-password" placeholder="Repeat password" required>
+            </div>
+            <% if (turnstileSiteKey) { %>
+              <div class="cf-turnstile-mount cf-turnstile" data-sitekey="<%= turnstileSiteKey %>" data-theme="dark"></div>
+            <% } %>
+            <button type="submit" class="btn btn-primary btn-block" id="signUpSubmit">Create account</button>
+          </form>
+        </div>
+
+        <p class="auth-switch" id="switchHint">New here? <a href="#" id="switchToSignUp" class="help-link">Create an account</a></p>
+      </div>
+    </section>
+  </div>
+
+  <div id="toastStack"></div>
+  <% if (turnstileSiteKey) { %><script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script><% } %>
+  <script src="/js/toast.js"></script>
+  <script src="/js/auth.js"></script>
+</body>
+</html>

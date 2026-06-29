@@ -1,0 +1,105 @@
+<%- include('partials/head', { pageTitle: 'Dashboard — WanitoModz Hosting' }) %>
+<body>
+  <div class="app-shell">
+    <%- include('partials/nav', { user: user, active: 'dashboard' }) %>
+
+    <main class="main-content">
+      <div class="page-pad">
+        <div class="page-head">
+          <div>
+            <h1>Dashboard</h1>
+            <p class="page-sub">Welcome back, <%= user.username %> 👋</p>
+          </div>
+          <a href="/bots/create" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Deploy a bot
+          </a>
+        </div>
+
+        <div class="stat-strip">
+          <div class="stat-chip">
+            <span class="stat-icon violet"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/><circle cx="8" cy="15.5" r="1.3" fill="currentColor"/><circle cx="16" cy="15.5" r="1.3" fill="currentColor"/><path d="M12 11V7m-3 0h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+            <div><div class="stat-value"><%= stats.used %> / <%= stats.limit %></div><div class="stat-label">Bots deployed</div></div>
+          </div>
+          <div class="stat-chip">
+            <span class="stat-icon green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 5l11 7-11 7V5z" fill="currentColor"/></svg></span>
+            <div><div class="stat-value"><%= stats.running %></div><div class="stat-label">Running now</div></div>
+          </div>
+          <div class="stat-chip">
+            <span class="stat-icon red"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg></span>
+            <div><div class="stat-value"><%= stats.stopped %></div><div class="stat-label">Stopped</div></div>
+          </div>
+          <div class="stat-chip">
+            <span class="stat-icon amber"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 7a2 2 0 012-2h3l1.5 2H18a2 2 0 012 2v8a2 2 0 01-2 2H6a2 2 0 01-2-2V7z" stroke="currentColor" stroke-width="1.8"/></svg></span>
+            <div style="flex:1;">
+              <div class="stat-value"><%= stats.storageUsedLabel %></div>
+              <div class="stat-label">of <%= stats.storageTotalLabel %> used</div>
+              <div class="storage-bar-track" style="margin-top:8px;"><div class="storage-bar-fill" style="width:<%= stats.storagePercent %>%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-head">
+            <h2>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/></svg>
+              Your bots
+            </h2>
+          </div>
+
+          <% if (!bots.length) { %>
+            <div class="empty-state">
+              <div class="empty-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/><circle cx="8" cy="15.5" r="1.3" fill="currentColor"/><circle cx="16" cy="15.5" r="1.3" fill="currentColor"/></svg></div>
+              <h3>No bots deployed yet</h3>
+              <p>Upload a Python script and get your first Telegram bot online.</p>
+              <a href="/bots/create" class="btn btn-primary">Deploy your first bot</a>
+            </div>
+          <% } else { %>
+            <% bots.forEach(function(bot) { %>
+              <div class="bot-row" data-bot-id="<%= bot.id %>">
+                <span class="bot-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/><circle cx="8" cy="15.5" r="1.3" fill="currentColor"/><circle cx="16" cy="15.5" r="1.3" fill="currentColor"/></svg></span>
+                <div class="bot-meta">
+                  <div class="bot-name">
+                    <a href="/bots/<%= bot.id %>"><%= bot.name %></a>
+                    <span class="status-pill <%= bot.status %>"><%= bot.status %></span>
+                  </div>
+                  <div class="bot-sub"><%= bot.library %></div>
+                </div>
+                <div class="bot-actions">
+                  <% if (bot.status === 'running') { %>
+                    <button class="btn btn-secondary btn-sm js-stop" data-id="<%= bot.id %>">Stop</button>
+                  <% } else { %>
+                    <button class="btn btn-secondary btn-sm js-start" data-id="<%= bot.id %>">Start</button>
+                  <% } %>
+                  <a href="/bots/<%= bot.id %>" class="icon-btn" title="View logs">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 17l5-5-5-5M12 19h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </a>
+                  <button class="icon-btn js-delete" data-id="<%= bot.id %>" title="Delete">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+              </div>
+            <% }) %>
+          <% } %>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="confirmModal">
+    <div class="modal">
+      <h3>Delete this bot?</h3>
+      <p style="color:var(--text-muted);font-size:13.5px;">This stops the process and permanently removes its uploaded files. This can't be undone.</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="confirmCancel">Cancel</button>
+        <button class="btn btn-danger" id="confirmDelete">Delete bot</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastStack"></div>
+  <script src="/js/toast.js"></script>
+  <script src="/js/app-shell.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
